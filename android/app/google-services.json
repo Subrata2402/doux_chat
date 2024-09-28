@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "732492108103",
+    "project_id": "douxchat32",
+    "storage_bucket": "douxchat32.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732492108103:android:354c79eeed3c358e95fc62",
+        "android_client_info": {
+          "package_name": "com.example.doux_chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWfDhiBr6PC3otjy605p4ByS8X1Wdqd2s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
