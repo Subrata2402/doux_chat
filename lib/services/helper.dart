@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 // String baseUrl = "https://chat-server-ffid.onrender.com";
-String baseUrl = "http://192.168.0.104:3250";
+String baseUrl = "http://192.168.0.102:3250";
 
 void customSnackBar(BuildContext context, String message, String type) {
   ScaffoldMessenger.of(context).showSnackBar(

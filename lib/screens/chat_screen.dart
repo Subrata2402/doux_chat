@@ -130,13 +130,14 @@ class _ChatScreenState extends State<ChatScreen> {
     checkOnlineStatus();
 
     // Listen for online status
-    // SocketService().listen('online', (data) {
-    //   if (mounted) {
-    //     setState(() {
-    //       isOnline = data['isOnline'];
-    //     });
-    //   }
-    // });
+    SocketService().listen('online', (data) {
+      debugPrint('Online status: ${data['isOnline']}');
+      if (mounted) {
+        setState(() {
+          isOnline = data['isOnline'];
+        });
+      }
+    });
 
     // SocketService().listen('read-message', (data) {
     //   debugPrint("Message read");

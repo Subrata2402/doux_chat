@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:doux_chat/screens/chat_screen.dart';
 import 'package:doux_chat/services/api_services.dart';
 import 'package:doux_chat/services/helper.dart';
@@ -12,10 +14,11 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   final TextEditingController usernameController = TextEditingController();
   dynamic chatList = [];
   bool isLoading = false;
+  String? userId;
 
   void dropDownMenu(BuildContext context) {
     showMenu(
@@ -152,9 +155,19 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future<void> fetchUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userData = prefs.getString('userData');
+    if (userData != null) {
+      final user = jsonDecode(userData);
+      userId = user['_id'];
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    fetchUserId();
     fetchChatList();
     // Join chat room using socket service
     SocketService().joinRoom();
@@ -164,13 +177,33 @@ class _HomeScreenState extends State<HomeScreen> {
       debugPrint('Message received: $data');
       fetchChatList(loading: false);
     });
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     SocketService().leaveRoom();
     usernameController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    
+    if (state == AppLifecycleState.paused) {
+      debugPrint("App is in the background or minimized");
+      SocketService().socketEmit('offline', userId);
+    } else if (state == AppLifecycleState.resumed) {
+      debugPrint("App is in the foreground");
+      SocketService().socketEmit('online', userId);
+    } else if (state == AppLifecycleState.inactive) {
+      debugPrint("App is inactive (e.g., during a phone call)");
+      SocketService().socketEmit('offline', userId);
+    } else if (state == AppLifecycleState.detached) {
+      print("App is detached from the view (not attached to UI anymore)");
+    }
   }
 
   @override
